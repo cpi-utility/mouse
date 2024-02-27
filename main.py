@@ -553,6 +553,29 @@ def process_announcement(message):
     bot.send_message(TEACHER, "Объявление успешно отправлено всем пользователям.")
     handle_home(message)
 
+@bot.message_handler(commands=['update'])
+def handle_update(message):
+    if message.chat.id == OWNER:
+        # Получаем текст сообщения после команды '/update'
+        command_text = message.text.split(' ', 1)[-1]
+
+        # Формируем команду для запуска ipsbupdate.py в новом окне
+        if os.name == 'nt':  # Проверяем операционную систему (Windows)
+            command = f'start python ipsbupdate.py {command_text}'
+        else:  # Для Linux и других ОС
+            command = f'x-terminal-emulator -e python ipsbupdate.py {command_text}'
+
+        # Запускаем новый процесс с командой
+        try:
+            subprocess.Popen(command, shell=True)
+            bot.send_message(OWNER, "Обновление запущено. Бот будет завершен.")
+            # Завершаем работу текущего процесса бота
+            os._exit(0)
+        except Exception as e:
+            bot.send_message(OWNER, f"Ошибка при запуске обновления: {e}")
+    else:
+        prm(message.chat.id)
+
 if __name__ == "__main__":
     print(Back.BLACK + Fore.GREEN + 'Bot started!')
     bot.polling(none_stop=True)
