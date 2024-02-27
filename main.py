@@ -14,6 +14,7 @@ from config import TOKEN, TEACHER, OWNER
 from colorama import Fore, Back, Style
 import qrcode
 from io import BytesIO
+import subprocess
 
 os.system("cls")
 
